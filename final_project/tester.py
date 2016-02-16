@@ -1,5 +1,4 @@
 #!/usr/bin/pickle
-
 """ a basic script for importing student's POI identifier,
     and checking the results that they get from it 
  
@@ -12,39 +11,64 @@
 
 import pickle
 import sys
+import numpy as np
 from sklearn.cross_validation import StratifiedShuffleSplit
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
+from pprint import pprint
+
 
 PERF_FORMAT_STRING = "\
-\tAccuracy: {:>0.{display_precision}f}\tPrecision: {:>0.{display_precision}f}\t\
+Accuracy: {:>0.{display_precision}f}\tPrecision: {:>0.{display_precision}f}\t\
 Recall: {:>0.{display_precision}f}\tF1: {:>0.{display_precision}f}\tF2: {:>0.{display_precision}f}"
-RESULTS_FORMAT_STRING = "\tTotal predictions: {:4d}\tTrue positives: {:4d}\tFalse positives: {:4d}\
+RESULTS_FORMAT_STRING = "Total predictions: {:4d}\nTrue positives: {:4d}\tFalse positives: {:4d}\
 \tFalse negatives: {:4d}\tTrue negatives: {:4d}"
 
-def test_classifier(clf, dataset, feature_list, folds = 1000):
+def test_classifier(clf, dataset, feature_list, folds = 1000):    
+    #converts dictionay to np.array    
     data = featureFormat(dataset, feature_list, sort_keys = True)
+    #splits and converts np.array into lists
     labels, features = targetFeatureSplit(data)
-    cv = StratifiedShuffleSplit(labels, folds, random_state = 42)
+    #
+    #print "labels", labels    
+    cv = StratifiedShuffleSplit(labels, folds, random_state = 42)  
+    #print len(cv)
+    #print len(labels)    
     true_negatives = 0
     false_negatives = 0
     true_positives = 0
     false_positives = 0
     for train_idx, test_idx in cv: 
+        #print "train_idx" 
+        #print "test/train", float(len(test_idx))/float(len(train_idx))       
+        #print len(train_idx) 
+        #print len(test_idx)
+        #print test_idx
+        #print "test_idx", test_idx
         features_train = []
         features_test  = []
         labels_train   = []
         labels_test    = []
         for ii in train_idx:
+            #print "ii", ii            
             features_train.append( features[ii] )
             labels_train.append( labels[ii] )
+            #no_ones = []            
+            #if labels[ii] == 1:
+            #    no_ones.append(1)
         for jj in test_idx:
+            #print "jj", jj
             features_test.append( features[jj] )
             labels_test.append( labels[jj] )
         
         ### fit the classifier using training set, and test on test set
-        clf.fit(features_train, labels_train)
-        predictions = clf.predict(features_test)
+        try:
+            clf.fit(features_train, labels_train)
+            predictions = clf.predict(features_test)
+        except:
+            clf.fit(np.array(features_train), np.array(labels_train))
+            predictions = clf.predict(np.array(features_test))
+        
         for prediction, truth in zip(predictions, labels_test):
             if prediction == 0 and truth == 0:
                 true_negatives += 1
