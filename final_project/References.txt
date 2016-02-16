@@ -1,0 +1,9 @@
+References used for Enron Free Responses
+1. http://stackoverflow.com/questions/31421413/how-to-compute-precision-recall-accuracy-and-f1-score-for-the-multiclass-case
+- Used for f1 determination; GridSearch
+2. https://www.researchgate.net/post/what_is_the_difference_between_validation_set_and_test_set
+- pdf is from research gate
+3. http://www.randalolson.com/2012/08/06/statistical-analysis-made-easy-in-python/ 
+- getting started with pipelines and gridsearch
+4. http://www.youtube.com/watch?v=xYqiIjaqydU&list=PLBv09BD7ez_7-4V3IJIzCHWQj9nd4rVWB
+- though this states naive bayes, I watched a lot of his videos 
