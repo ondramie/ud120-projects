@@ -377,9 +377,11 @@ if True:
     print "GridSearch time:" 
     time1 = round(time()-t0,2)
     print time1
-    
+    print "test_classifier time:" 
+    time2 = round(time()-t1, 2)
     test_classifier(clf_best, my_dataset, full_features_list)
-
+    print time2
+    print "total time:", time2+time1
 print "-----------------------------------------------------------------------"
 ############################################################################### 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
@@ -400,13 +402,8 @@ print "-----------------------------------------------------------------------"
 ### generates the necessary .pkl files for validating your results.
 
 t1 = time()
-if False:
+if full_report:
     for clf in [ dtc, gnc, knn, abc, rfc ]:
        test_classifier(clf, my_dataset, features_list)
-
-print "test_classifier time:" 
-time2 = round(time()-t1, 2)
-print time2
-print "total time:", time2+time1
 
 dump_classifier_and_data(clf_best, my_dataset, full_features_list)
